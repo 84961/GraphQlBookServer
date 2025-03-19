@@ -1,3 +1,5 @@
+using GraphQlBooks.GraphQL;
+
 namespace GraphQlBooks.Models;
 public class Book : IReadingMaterials, IThings
 {
@@ -14,6 +16,14 @@ public class Book : IReadingMaterials, IThings
     public Author? Author { get; set; }
 
     public BookReview[]? Reviews { get; set; }
+}
+
+public class BookType : ObjectType<Book>
+{
+    protected override void Configure(IObjectTypeDescriptor<Book> descriptor)
+    {
+        descriptor.Field("publishDate").ResolveWith<Resolvers>(r => r.GetFormattedDate(default));
+    }
 }
 
 
