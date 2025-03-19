@@ -1,0 +1,385 @@
+{
+  books{
+    name
+    pages
+  }
+}
+===============================================
+
+{
+  books{
+    name
+    pages
+    genre
+    reviews {
+      rating
+      description
+    }
+    author {
+      name
+    }
+  }
+}
+=======================================================
+
+{
+  magazines {
+    name
+  }
+}
+============================================================
+interface
+===================================================
+{
+  readingMaterials {
+    name
+    genre
+  }
+}
+
+
+================================================================
+union things
+= Book | Magazine       
+=====================================================================
+{
+  things {
+    __typename
+	... on Book {
+	name
+	publishDate
+	reviews {
+	 rating
+	}
+	}
+	... on Magazine {
+	 name
+	 genre
+	}
+  }
+}
+
+===========================================================================
+
+query {
+  books {
+    bookId
+    name
+    genre
+    pages
+    author {
+     authorId
+     name
+   }
+  }
+}
+
+===========================================================================
+named query getmybooks
+==========================================================================
+query GetMyBooks {
+  books {
+    bookId
+    name
+    genre
+    pages
+    author {
+     authorId
+     name
+   }
+  }
+}
+====================================================================================
+filter on book names
+====================================================================================
+query GetBooksFilteredOnName {
+  booksByName(nameContains: "S") {
+    bookId
+    name
+    genre
+    pages
+    author {
+     authorId
+     name
+   }
+  }
+}
+
+================================================================================================
+filter on book names pass variables
+================================================================================================
+query GetBooksFilteredOnName($bookName: String) {
+  booksByName(nameContains: $bookName) {
+    bookId
+    name
+    genre
+    pages
+    author {
+     authorId
+     name
+   }
+  }
+}
+// pass variables in variables tab
+{
+  "bookName": "E"
+}
+================================================================================================
+alias same query booksByName with same arguments alias it as booksWithE and booksWithW
+================================================================================================
+query GetBooksFilteredOnName() {
+  booksWithE: booksByName(nameContains: "E") {
+    bookId
+    name
+    genre
+  }
+  booksWithW: booksByName(nameContains: "W") {
+    bookId
+    name
+    genre
+  }
+}
+================================================================================================
+fragments
+================================================================================================
+query GetBooksFilteredOnName() {
+  booksWithE: booksByName(nameContains: "E") {
+    ...bookFields
+
+  }
+  booksWithW: booksByName(nameContains: "W") {
+    ...bookFields
+  }
+}
+
+fragment bookFields on Book {
+   bookId
+   name
+   genre
+}
+================================================================================================
+fragments and directive to include or exclude fields
+===============================================================================================
+query GetBooksFilteredOnName($withAuthor: Boolean!) {
+  booksWithE: booksByName(nameContains: "E") {
+    ...bookFields
+    author @include(if : $withAuthor) {
+      name
+    }
+
+  }
+  booksWithW: booksByName(nameContains: "W") {
+    ...bookFields
+  }
+}
+
+fragment bookFields on Book {
+   bookId
+   name
+   genre
+}
+
+// pass variables in variables tab
+{
+  "withAuthor": true
+}
+================================================================================================
+skip directive
+================================================================================================
+query GetBooksFilteredOnName($withAuthor: Boolean!, $noGenre: Boolean!) {
+  booksWithE: booksByName(nameContains: "E") {
+    ...bookFields
+    author @include(if : $withAuthor) {
+      name
+    }
+
+  }
+  booksWithW: booksByName(nameContains: "W") {
+    ...bookFields
+  }
+}
+
+fragment bookFields on Book {
+   bookId
+   name
+   genre @skip (if: $noGenre)
+}
+
+
+// pass variables in variables tab
+{
+  "withAuthor": true,
+  "noGenre": true
+}
+
+================================================================================================
+inline fragments for interfaces on book get the pages property on magazines get the issue no
+================================================================================================
+{
+  readingMaterials {
+    name
+    ...on Book {
+      pages
+    }
+    ...on Magazine {
+      issueNo
+    }
+  }
+}
+
+================================================================================================
+
+using metafield typename to get the type of result
+================================================================================================
+{
+  readingMaterials {
+    name
+    ...on Book {
+      pages
+    }
+    ...on Magazine {
+      issueNo
+    }
+    __typename
+  }
+}
+=================================== =============================================================
+introspection
+================================================================================================
+{
+  __schema {
+    types {
+      name
+    }
+  }
+}
+===================================================================================================
+introspection to get the name fields and type of fields
+===================================================================================================
+{
+  __schema {
+    types {
+      name
+      kind
+      description
+      fields {
+        name
+        type {
+          name
+          kind
+          ofType {
+            name
+          }
+     
+        }
+      }
+    }
+  }
+}
+
+=========================================================================================================
+introspection to get the name fields and type of fields for Book
+=========================================================================================================
+{
+  __type(name: "Book") {
+    name
+    kind
+    description
+    fields {
+      name
+      type {
+        name
+        kind
+        ofType {
+          name
+        }
+      }
+    }
+  }
+}
+==========================================================================================================
+mutation to add book
+==========================================================================================================
+mutation ($book: BookInput!) {
+    addBook(input: $book) {
+      bookId
+      name
+      pages
+    }
+}
+
+{
+    "book": {
+       "name": "Rich Dad Poor Dad",
+        "pages": 274,
+        "genre" : "NON_FICTION",
+        "price": 14.99
+     }
+}
+
+==========================================================================================================
+subsription give this query in a sepearta tab and then do the mutation to add book with susbcription to see
+the susbcription containing the book added
+==========================================================================================================
+
+subscription {
+  bookAdded {
+   bookId
+   name
+  }
+}
+
+mutation ($book: BookInput!) {
+    addBookWithSubscription(input: $book) {
+      bookId
+      name
+      pages
+    }
+}
+
+{
+    "book": {
+       "name": "The bastard of istanbul",
+        "pages": 274,
+        "genre" : "NON_FICTION",
+        "price": 14.99
+     }
+}
+
+
+==========================================================================================================
+update book mutation
+==========================================================================================================
+
+mutation ($bookId: Int!, $book: BookInput!) {
+    updateBook (bookId:$bookId,input: $book) {
+      bookId
+      name
+      pages
+    }
+}
+
+
+{
+    "bookId": 7386,
+    "book": {
+       "name": "The book thief",
+        "pages": 500,
+        "genre" : "DRAMA",
+        "price": 14.99
+     }
+}
+
+==========================================================================================================
+delete book mutation
+==========================================================================================================
+
+mutation ($bookId: Int!) {
+    deleteBook (bookId:$bookId) 
+}
+
+
+{
+    "bookId": 4460
+}
+

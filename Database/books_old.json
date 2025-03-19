@@ -1,0 +1,72 @@
+[
+  {
+    "bookId": 17,
+    "name": "Harry Potter",
+    "pages": 267,
+    "genre": "Fantasy",
+    "author": {
+      "authorId": 109,
+      "name": "J.K. Rowling"
+    },
+    "reviews": [
+      {
+        "reviewId": 1,
+        "rating": 4.5,
+        "description": "A magical journey!",
+        "reviewDate": "2020-01-01",
+        "user": "Alice"
+      },
+      {
+        "reviewId": 2,
+        "rating": 5,
+        "description": "Absolutely loved it!",
+        "reviewDate": "2020-01-02",
+        "user": "Bob"
+      }
+    ]
+  },
+  {
+    "bookId": 54,
+    "name": "Memory Man",
+    "genre": "Fantasy",
+    "pages": 560,
+    "reviews": [
+      {
+        "reviewId": 3,
+        "rating": 4,
+        "description": "Intriguing and captivating.",
+        "reviewDate": "2020-02-01",
+        "user": "Charlie"
+      },
+      {
+        "reviewId": 4,
+        "rating": 4.5,
+        "description": "A must-read!",
+        "reviewDate": "2020-02-02",
+        "user": "Dave"
+      }
+    ]
+  },
+  {
+    "bookId": 66,
+    "name": "Exhalation",
+    "genre": "Drama",
+    "pages": 368,
+    "reviews": [
+      {
+        "reviewId": 5,
+        "rating": 5,
+        "description": "Thought-provoking and profound.",
+        "reviewDate": "2020-03-01",
+        "user": "Eve"
+      },
+      {
+        "reviewId": 6,
+        "rating": 4.8,
+        "description": "A brilliant collection of stories.",
+        "reviewDate": "2020-03-02",
+        "user": "Frank"
+      }
+    ]
+  }
+]
